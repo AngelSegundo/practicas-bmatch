@@ -1,0 +1,40 @@
+steps:
+  # Docker build
+  - id: "Build docker image"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/operations-api-$BRANCH_NAME:$COMMIT_SHA",
+        "-t",
+        "gcr.io/$PROJECT_ID/operations-api-service:latest",
+        "--file",
+        "apps/operations-api/Dockerfile.operations-api",
+        "--build-arg",
+        "project_name=$_PROJECT_ID",
+        ".",
+      ]
+  # Docker push
+  - id: "Push docker image to container registry"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/operations-api-$BRANCH_NAME:$COMMIT_SHA"]
+  # Run service
+  - id: "Create cloud run service"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "operations-api-service",
+        "--image",
+        "gcr.io/$PROJECT_ID/operations-api-$BRANCH_NAME:$COMMIT_SHA",
+        "--region",
+        "$_DEPLOY_REGION",
+        "--allow-unauthenticated",
+        "--set-env-vars",
+        "AUTHROIZATION_TOKEN=$_API_KEY",
+      ]
+images:
+  - gcr.io/$PROJECT_ID/operations-api-service:latest

@@ -1,0 +1,86 @@
+[
+  {
+    "value": 305,
+    "unit": "kWh",
+    "readingDate": "2021-09-01T08:59:30.999Z",
+    "month": "09",
+    "year": "2021"
+  },
+  {
+    "value": 301,
+    "unit": "kWh",
+    "readingDate": "2021-10-01T08:59:30.999Z",
+    "month": "10",
+    "year": "2021"
+  },
+  {
+    "value": 291,
+    "unit": "kWh",
+    "readingDate": "2021-11-01T08:59:30.999Z",
+    "month": "11",
+    "year": "2021"
+  },
+  {
+    "value": 286,
+    "unit": "kWh",
+    "readingDate": "2021-12-01T08:59:30.999Z",
+    "month": "12",
+    "year": "2021"
+  },
+  {
+    "value": 289,
+    "unit": "kWh",
+    "readingDate": "2022-01-01T08:59:30.999Z",
+    "month": "01",
+    "year": "2022"
+  },
+  {
+    "value": 285,
+    "unit": "kWh",
+    "readingDate": "2022-02-01T08:59:30.999Z",
+    "month": "02",
+    "year": "2022"
+  },
+  {
+    "value": 282,
+    "unit": "kWh",
+    "readingDate": "2022-03-01T08:59:30.999Z",
+    "month": "03",
+    "year": "2022"
+  },
+  {
+    "value": 283,
+    "unit": "kWh",
+    "readingDate": "2022-04-01T08:59:30.999Z",
+    "month": "04",
+    "year": "2022"
+  },
+  {
+    "value": 280,
+    "unit": "kWh",
+    "readingDate": "2022-05-01T08:59:30.999Z",
+    "month": "05",
+    "year": "2022"
+  },
+  {
+    "value": 299,
+    "unit": "kWh",
+    "readingDate": "2022-06-01T08:59:30.999Z",
+    "month": "06",
+    "year": "2022"
+  },
+  {
+    "value": 300,
+    "unit": "kWh",
+    "readingDate": "2022-07-01T08:59:30.999Z",
+    "month": "07",
+    "year": "2022"
+  },
+  {
+    "value": 305,
+    "unit": "kWh",
+    "readingDate": "2022-08-01T08:59:30.999Z",
+    "month": "08",
+    "year": "2022"
+  }
+]

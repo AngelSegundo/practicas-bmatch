@@ -1,0 +1,9 @@
+{
+  "title": "Sign In",
+  "helper": "Sign in to your account",
+  "form_email": "Email",
+  "form_password": "Password",
+  "form_signin": "Sign in",
+  "form_rememberMe": "Remember me",
+  "form_forgotPassword": "Did you forgot your password?"
+}

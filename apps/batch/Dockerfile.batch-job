@@ -1,0 +1,18 @@
+ARG project_name
+
+FROM node:18-alpine AS base
+RUN apk update && apk add git
+WORKDIR /app
+COPY . .
+
+## Build the app
+FROM base as builder
+RUN npm i --workspace batch
+RUN npm run build:job -w batch
+
+# Start the app
+FROM builder as runner
+
+ENV GOOGLE_CLOUD_PROJECT $project_name
+# expose this for port
+CMD ["npm", "run", "start:job", "-w", "batch"]

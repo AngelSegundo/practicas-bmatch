@@ -1,0 +1,55 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+build
+
+# express
+dist/
+.env
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env
+.env.local
+.env.prod
+.env.development.local
+.env.test.local
+.env.production.local
+service-account-key-local.json
+service-account-key-prod.json
+apps\operations-api\service-account-key-local.json
+.env.service-account-key.json
+
+# turbo
+.turbo
+
+# gcloud
+*key.json

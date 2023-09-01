@@ -1,0 +1,15 @@
+# ADMIN-API
+
+APIs used for the backoffice.
+
+In order to run the API a `.env.local` file must be placed in the root of `apps/admin-api` directory with the following pattern:
+
+```
+PORT=8000
+GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json
+GOOGLE_CLOUD_PROJECT=bmatch-dev
+SENGRID_API_KEY= ` ... `
+```
+
+Tu run the API execute `npm run dev -w admin-api` from the root directory.
+

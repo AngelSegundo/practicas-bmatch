@@ -1,0 +1,24 @@
+ARG project_name
+ARG sendgrid_api_key
+ARG files_bucket
+
+FROM node:18-alpine AS base
+RUN apk update && apk add git
+WORKDIR /app
+COPY . .
+
+## Build the app
+FROM base as builder
+RUN npm ci --workspace admin-api
+# RUN npm run prebuild -w admin-api
+RUN npm run build -w admin-api
+
+# Start the app
+FROM builder as runner
+
+ENV PORT 8000
+ENV GOOGLE_CLOUD_PROJECT=$project_name
+ENV SENDGRID_API_KEY=$sendgrid_api_key
+ENV FILES_BUCKET=$files_bucket
+EXPOSE 8000
+CMD ["npm", "run", "start", "-w", "admin-api"]

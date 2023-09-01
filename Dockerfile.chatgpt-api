@@ -1,0 +1,21 @@
+ARG project_name
+ARG openai_api_key
+
+FROM node:18-alpine AS base
+RUN apk update && apk add git
+WORKDIR /app
+COPY . .
+
+## Build the app
+FROM base as builder
+RUN npm ci --workspace chatgpt-api
+RUN npm run build -w chatgpt-api
+
+# Start the app
+FROM builder as runner
+
+ENV PORT 8000
+ENV GOOGLE_CLOUD_PROJECT=$project_name
+ENV OPENAI_API_KEY=$openai_api_key
+EXPOSE 8000
+CMD ["npm", "run", "start", "-w", "chatgpt-api"]

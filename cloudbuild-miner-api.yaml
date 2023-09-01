@@ -1,0 +1,42 @@
+steps:
+  # Docker build
+  - id: "Build docker image"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/miner-api-$BRANCH_NAME:$COMMIT_SHA",
+        "-t",
+        "gcr.io/$PROJECT_ID/miner-api-service:latest",
+        "--file",
+        "Dockerfile.miner-api",
+        "--build-arg",
+        "project_name=$PROJECT_ID",
+        ".",
+      ]
+  # Docker push
+  - id: "Push docker image to container registry"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/miner-api-$BRANCH_NAME:$COMMIT_SHA"]
+  # Run service
+  - id: "Create cloud run service"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "miner-api-service",
+        "--image",
+        "gcr.io/$PROJECT_ID/miner-api-$BRANCH_NAME:$COMMIT_SHA",
+        "--region",
+        "$_DEPLOY_REGION",
+        "--set-env-vars",
+        "GOOGLE_CLOUD_PROJECT=$PROJECT_ID",
+        "--set-env-vars",
+        "BUCKET_NAME=$_BUCKET_NAME",
+        "--allow-unauthenticated",
+      ]
+images:
+  - gcr.io/$PROJECT_ID/miner-api-service:latest

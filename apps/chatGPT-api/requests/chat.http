@@ -1,0 +1,30 @@
+POST https://app-api-service-qo5ilg2jpa-ew.a.run.app/ia/chat HTTP/1.1
+Content-Type: application/json
+Authorization: eyJhbGciOiJSUzI1NiIsImtpZCI6IjE2ZGE4NmU4MWJkNTllMGE4Y2YzNTgwNTJiYjUzYjUzYjE4MzA3NzMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYm1hdGNoLWRldiIsImF1ZCI6ImJtYXRjaC1kZXYiLCJhdXRoX3RpbWUiOjE2ODIxMDkwMzIsInVzZXJfaWQiOiJRb01mbHlYMlVaTlhNMkxGUXNOdWE0cENMOWQyIiwic3ViIjoiUW9NZmx5WDJVWk5YTTJMRlFzTnVhNHBDTDlkMiIsImlhdCI6MTY4MjEwOTAzMiwiZXhwIjoxNjgyMTEyNjMyLCJlbWFpbCI6ImZlcm5leUBibWF0Y2guY2wiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiZmVybmV5QGJtYXRjaC5jbCJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.G2gSEiueJi1KpChjCjEJyl61uEVxozkXASDJxREmaGjj5vw99DW52FWwZObo6KqbJAPtS_DnayyPk8XtoQdZF2vXXAs84sEa6j6M-XvoNUOXNUqIrKkICrPZHMvN_Xz82qNX9mSMYzn5fOcmTBP0W4eenwKhecyWqr0jws3FDclpTomOVn4hNm20GjJIt3bNWjqeoYcIIRhqSTKWFLbQUlEPCPKFnWUACWSIB5SH4eHdVEmSJVVeFAt5WsylyL0Mh897ib8b7MJMhMSxpqaFrNxXI4XpmjOqnMshQUscckXoftWKvAXGut5yZO7QT_q-Spo5ihqRGu_QhurosUmvZw
+
+{
+ "type": "water",
+  "userId" : "iPaPxqiQS4UctLxOpO2DMtgbdLD2",
+  "messages":[
+    {
+      "role":"user",
+      "content": "puedes analizar mi consumo de los ultimos 2 meses"
+    }
+  ]
+}
+
+###
+
+POST http://localhost:8001/ia/chat HTTP/1.1
+Content-Type: application/json
+
+{
+ "type": "water",
+  "userId" : "QoMflyX2UZNXM2LFQsNua4pCL9d2",
+  "messages":[
+    {
+      "role":"user",
+      "content": "puedes analizar mi consumo de los ultimos 2 meses"
+    }
+  ]
+}

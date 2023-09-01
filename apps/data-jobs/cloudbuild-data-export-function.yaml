@@ -1,0 +1,46 @@
+steps:
+  - id: "Prepare OS I"
+    name: node:18-alpine
+    entrypoint: apk
+    args: ["update"]
+  - id: "Prepare OS II"
+    name: node:18-alpine
+    entrypoint: apk
+    args: ["add", "--no-cache", "git", "build-base", "libc6-compat", "gcompat"]
+  - id: "Globals"
+    name: node:18-alpine
+    entrypoint: npm
+    args: ["root", "-g"]
+  - id: "Install turbo"
+    name: node:18-alpine
+    entrypoint: npm
+    args: ["install", "-g", "turbo"]
+  - id: "Install dependencies"
+    name: node:18-alpine
+    entrypoint: npm
+    args: ["install"]
+  - id: "Build de function"
+    name: node:18-alpine
+    entrypoint: npx
+    args: ["turbo", "run", "build", "--filter=data-jobs"]
+  - id: "Deploy cloud function"
+    name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "functions",
+        "deploy",
+        "streamToBigQuery",
+        "--region",
+        "europe-west3",
+        "--runtime",
+        "nodejs18",
+        "--entry-point",
+        "streamToBigQuery",
+        "--trigger-event",
+        "providers/cloud.firestore/eventTypes/document.write",
+        "--trigger-resource",
+        "projects/$PROJECT_ID/databases/(default)/documents/{collectionId}/{documentId}",
+        "--source",
+        "apps/data-jobs/dist/functions/",
+      ]
+    dir: "apps/data-jobs/dist/functions"

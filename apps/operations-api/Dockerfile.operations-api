@@ -1,0 +1,20 @@
+ARG project_name
+
+FROM node:18-alpine AS base
+RUN apk update && apk add git
+WORKDIR /app
+COPY . .
+
+## Build the app
+FROM base as builder
+RUN npm ci --workspace operations-api
+# RUN npm run prebuild -w operations-api
+RUN npm run build -w operations-api
+
+# Start the app
+FROM builder as runner
+
+ENV PORT 8000
+ENV GOOGLE_CLOUD_PROJECT=$project_name
+EXPOSE 8000
+CMD ["npm", "run", "start", "-w", "operations-api"]

@@ -1,0 +1,27 @@
+{
+  "name": "data-jobs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build:jobs && npm run build:functions",
+    "build:jobs": "node ./build-jobs.js",
+    "build:extra": "node ./build-extra.js",
+    "build:functions": "node ./build-functions.js",
+    "start": "node dist/job/index.js",
+    "extra": "node dist/job/extra.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Francisco Jesús Cadenas Callejón",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/bigquery": "^6.0.3",
+    "@google-cloud/firestore": "^6.4.1",
+    "domain": "*",
+    "dotenv": "^16.0.3",
+    "esbuild": "^0.16.11",
+    "esbuild-plugin-node-externals": "^1.0.1",
+    "zod": "^3.20.2"
+  }
+}

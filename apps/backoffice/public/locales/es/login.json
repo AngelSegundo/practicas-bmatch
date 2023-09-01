@@ -1,0 +1,9 @@
+{
+  "title": "Entrar en la plataforma",
+  "helper": "Introduzca sus datos de usuario para acceder a Bmatch.",
+  "form_email": "Email",
+  "form_password": "Contraseña",
+  "form_signin": "Acceder",
+  "form_rememberMe": "Recordarme",
+  "form_forgotPassword": "¿Olvidaste tu contraseña?"
+}

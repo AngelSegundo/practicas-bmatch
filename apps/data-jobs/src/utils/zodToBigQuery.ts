@@ -1,0 +1,222 @@
+/* eslint-disable @typescript-eslint/ban-types */
+import type { TableField } from "@google-cloud/bigquery";
+import { ZodObject, ZodRawShape, ZodTypeAny } from "zod";
+
+export const convert = (type: ZodObject<ZodRawShape>): Array<TableField> => {
+  return Object.entries(type.shape)
+    .map(([name, value]) => convertAny(name, value))
+    .filter(isField);
+};
+
+const isField = (field?: TableField): field is TableField => !!field;
+
+const convertAny = (name: string, type: ZodTypeAny): TableField | undefined => {
+  switch (type._def.typeName) {
+    case "ZodLiteral": {
+      switch (typeof type._def.value) {
+        case "boolean":
+          return {
+            name,
+            type: "BOOL",
+          };
+        case "number":
+          return {
+            name,
+            type: "NUMERIC",
+          };
+        case "bigint":
+          return {
+            name,
+            type: "BIGNUMERIC",
+          };
+        case "string":
+          return {
+            name,
+            type: "STRING",
+          };
+        default:
+          return;
+      }
+    }
+
+    case "ZodArray": {
+      const child = convertAny(name, type._def.type);
+      if (!child) {
+        return;
+      }
+      return {
+        ...child,
+        name,
+        mode: "REPEATED",
+      };
+    }
+
+    case "ZodObject":
+      return {
+        name,
+        type: "STRUCT",
+        fields: convert(type as ZodObject<{}>),
+      };
+
+    case "ZodTuple":
+      return {
+        name,
+        type: "STRUCT",
+        fields: type._def.items
+          .map((item: ZodTypeAny, i: number) => {
+            return convertAny(`${i}`, item);
+          })
+          .filter(isField),
+      };
+
+    case "ZodRecord":
+    case "ZodMap":
+      return {
+        name,
+        type: "STRUCT",
+        mode: "REPEATED",
+        fields: [
+          convertAny("key", type._def.keyType),
+          convertAny("value", type._def.valueType),
+        ].filter(isField),
+      };
+
+    case "ZodSet": {
+      const child = convertAny(name, type._def.valueType);
+      if (!child) {
+        return;
+      }
+      return {
+        ...child,
+        name,
+        mode: "REPEATED",
+      };
+    }
+
+    case "ZodBoolean":
+      return {
+        name,
+        type: "BOOL",
+      };
+
+    case "ZodNumber":
+      if (
+        type._def.checks.some(
+          ({ kind }: { kind: string; message?: string }) => kind === "int"
+        )
+      ) {
+        return {
+          name,
+          type: "INT64",
+        };
+      }
+      return {
+        name,
+        type: "NUMERIC",
+      };
+
+    case "ZodBigInt":
+      return {
+        name,
+        type: "BIGNUMERIC",
+      };
+
+    case "ZodNaN":
+      return {
+        name,
+        type: "NUMERIC",
+      };
+
+    case "ZodString": {
+      const checks = (
+        type._def.checks as Array<{ kind: string; regex: RegExp }>
+      ).filter(({ kind }: { kind: string }) => kind === "regex");
+      if (checks.some(({ regex }) => regex === RegExpDate)) {
+        return {
+          name,
+          type: "DATE",
+        };
+      }
+      if (checks.some(({ regex }) => regex === RegExpTime)) {
+        return {
+          name,
+          type: "TIME",
+        };
+      }
+      return {
+        name,
+        type: "STRING",
+      };
+    }
+
+    case "ZodDate":
+      return {
+        name,
+        type: "TIMESTAMP",
+      };
+
+    case "ZodEnum":
+    case "ZodNativeEnum":
+      return {
+        name,
+        type: "STRING",
+      };
+
+    case "ZodOptional":
+    case "ZodNullable": {
+      const child = convertAny(name, type._def.innerType);
+      if (!child) {
+        return;
+      }
+      return {
+        mode: "NULLABLE",
+        ...child,
+        name,
+      };
+    }
+
+    case "ZodDefault":
+      // Ignore the type
+      return convertAny(name, type._def.innerType);
+
+    case "ZodEffects":
+      // Ignore the type
+      return convertAny(name, type._def.schema);
+
+    case "ZodUndefined":
+    case "ZodNull":
+    case "ZodUnknown":
+    case "ZodNever":
+    case "ZodVoid":
+    case "ZodFunction":
+    case "ZodPromise":
+    case "ZodLazy":
+    case "ZodCustom":
+    case "ZodAny":
+      // Ignore the field
+      return;
+
+    case "ZodUnion":
+    case "ZodDiscriminatedUnion":
+    case "ZodIntersection":
+      throw new Error(
+        `The multiple type "${type._def.typeName}" is not supported in Zoq. Must be translated into a single type supported by BigQuery before conversion. See https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types`
+      );
+
+    // case "ZodAny":
+    //   throw new Error(
+    //     `The ambiguous type "${type._def.typeName}" is not supported in Zoq. Must be translated into the types supported by BigQuery before conversion. See https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types`
+    //   );
+
+    default:
+      throw new Error(
+        `The unknown type "${type._def.typeName}" is not supported in Zoq. Must be translated into the types supported by BigQuery before conversion. See https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types`
+      );
+  }
+};
+
+// https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#date_type
+export const RegExpDate = /\d{4}-\d{2}-\d{2}/;
+
+// https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#time_type
+export const RegExpTime = /\d{2}:\d{2}:\d{2}(:?.\d{1,6})?/;
